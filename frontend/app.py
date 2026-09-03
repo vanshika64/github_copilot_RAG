@@ -310,15 +310,19 @@ else:
                 tree = tree_resp.json()["tree"]
 
                 def render_tree(node, prefix=""):
-                    for key, val in sorted(node.items()):
-                        if key == "__files__":
-                            for fname in sorted(val):
-                                full = f"{prefix}{fname}"
-                                if st.button(f"📄 {full}", key=f"file_{full}"):
-                                    st.session_state["selected_file"] = full
-                        else:
-                            with st.expander(f"📂 {key}", expanded=False):
-                                render_tree(val, prefix=f"{prefix}{key}/")
+                    # ``__files__`` is the leaf list produced by
+                    # ``build_file_tree``. It must be rendered, not traversed
+                    # as a directory dict.
+                    for fname in sorted(node.get("__files__", [])):
+                        full = f"{prefix}{fname}"
+                        if st.button(f"📄 {full}", key=f"file_{full}"):
+                            st.session_state["selected_file"] = full
+
+                    for directory, child_node in sorted(node.items()):
+                        if directory == "__files__":
+                            continue
+                        st.markdown(f"📂 **{directory}**")
+                        render_tree(child_node, prefix=f"{prefix}{directory}/")
 
                 render_tree(tree)
 
@@ -331,6 +335,10 @@ else:
                         data = content_resp.json()
                         st.subheader(f"`{fpath}`")
                         st.code(data["content"], language=data["language"])
+                    else:
+                        st.error(safe_detail(content_resp))
+            else:
+                st.error(safe_detail(tree_resp))
 
         with tab2:
             fpath = st.text_input("File path to explain", value=st.session_state.get("selected_file", ""))

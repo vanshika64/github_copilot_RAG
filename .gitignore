@@ -1,0 +1,34 @@
+# Secrets and local environment overrides
+.env
+.env.*
+!.env.example
+
+# Python virtual environments and bytecode
+venv/
+.venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Test, type-checker, and coverage output
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+coverage.xml
+htmlcov/
+
+# Application runtime data: cloned repositories and FAISS indexes
+backend/repo_cache/
+backend/vectorstore/indexes/
+data/
+
+# Streamlit and editor/OS files
+.streamlit/secrets.toml
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

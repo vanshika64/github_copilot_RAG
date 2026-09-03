@@ -10,6 +10,7 @@ sentence-transformers==3.1.1
 faiss-cpu==1.8.0.post1
 numpy==1.26.4
 groq==0.11.0
+httpx==0.27.2
 
 # --- Frontend (Streamlit) -------------------------------------------------
 streamlit==1.38.0

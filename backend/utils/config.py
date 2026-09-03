@@ -6,24 +6,35 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = BASE_DIR.parent
 
-BASE_DIR = Path(__file__).resolve().parent.parent          # backend/
-PROJECT_ROOT = BASE_DIR.parent                              # github-rag-copilot/
+# Explicitly load .env from project root
+load_dotenv(PROJECT_ROOT / ".env")
 
-# ---- Storage locations -----------------------------------------------------
-CLONE_DIR = Path(os.getenv("CLONE_DIR", BASE_DIR / "repo_cache"))
-INDEX_DIR = Path(os.getenv("INDEX_DIR", BASE_DIR / "vectorstore" / "indexes"))
+CLONE_DIR = Path(
+    os.getenv(
+        "CLONE_DIR",
+        PROJECT_ROOT / "data" / "repo_cache"
+    )
+)
+
+INDEX_DIR = Path(
+    os.getenv(
+        "INDEX_DIR",
+        PROJECT_ROOT / "data" / "vectorstore" / "indexes"
+    )
+)
+
 CLONE_DIR.mkdir(parents=True, exist_ok=True)
 INDEX_DIR.mkdir(parents=True, exist_ok=True)
-
 # ---- GitHub -----------------------------------------------------------------
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
 GITHUB_API_URL = "https://api.github.com"
 
 # ---- LLM (Groq) ---------------------------------------------------------------
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 
 # ---- Embeddings ---------------------------------------------------------------
 EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME", "all-MiniLM-L6-v2")
