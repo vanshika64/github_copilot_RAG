@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#332a27" />
+  <title>Source & Sage — Repository Copilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <aside class="sidebar">
+    <a class="brand" href="#setup" aria-label="Source and Sage home"><span class="brand-mark">S</span><span>source<br><em>&amp; sage</em></span></a>
+    <p class="eyebrow">REPOSITORY COPILOT</p>
+    <nav class="nav" aria-label="Main navigation">
+      <button class="nav-link active" data-view="setup"><span>01</span> Repository setup <i>↗</i></button>
+      <button class="nav-link" data-view="chat"><span>02</span> Ask the codebase <i>↗</i></button>
+      <button class="nav-link" data-view="explorer"><span>03</span> Explore the source <i>↗</i></button>
+    </nav>
+    <div class="side-status" id="side-status"><span class="status-dot"></span><div><small>WORKSPACE</small><strong>No repository selected</strong></div></div>
+    <div class="side-footer"><span>Crafted for clarity</span><button class="quiet-button" id="api-toggle">API settings</button></div>
+  </aside>
+
+  <main class="main-shell">
+    <header class="topbar"><div class="crumb" id="breadcrumb">WORKSPACE / <b>NEW REPOSITORY</b></div><div class="api-indicator"><span></span><span id="api-label">localhost:8000</span></div></header>
+
+    <section class="view active" id="setup-view">
+      <div class="hero"><p class="eyebrow">MAKE SENSE OF WHAT YOU INHERIT</p><h1>Know a codebase<br><em>before</em> you touch it.</h1><p class="lede">Give us a GitHub repository and get a guided map of its code, architecture, and intent.</p></div>
+      <div class="setup-grid">
+        <form class="surface setup-card" id="repository-form">
+          <div class="card-heading"><span class="step-number">01</span><div><h2>Bring a repository</h2><p>Public repos work immediately. Use a token for private access.</p></div></div>
+          <label for="repo-url">GitHub repository URL</label>
+          <input id="repo-url" type="url" autocomplete="url" required placeholder="https://github.com/owner/repository" />
+          <label for="github-token">Personal access token <small>OPTIONAL</small></label>
+          <input id="github-token" type="password" autocomplete="off" placeholder="ghp_••••••••••••" />
+          <button class="primary-button" id="index-button" type="submit"><span>Index repository</span><b>→</b></button>
+          <p class="form-note">Your token is sent only to your local API and is never stored in this interface.</p>
+        </form>
+        <div class="surface ritual-card"><div class="orbital"><span>✦</span></div><p class="eyebrow">THE READING RITUAL</p><ol><li><b>01</b><span>We verify your repository</span></li><li><b>02</b><span>We map the source and structure</span></li><li><b>03</b><span>You ask better questions</span></li></ol><div class="quote">“Context is the beginning of good engineering.”</div></div>
+      </div>
+      <div class="progress-panel hidden" id="progress-panel"><div class="progress-copy"><span class="pulse-dot"></span><div><small id="progress-stage">PREPARING</small><strong id="progress-message">Preparing your workspace…</strong></div><b id="progress-value">0%</b></div><div class="progress-track"><i id="progress-bar"></i></div></div>
+      <div id="repository-result"></div>
+    </section>
+
+    <section class="view" id="chat-view">
+      <div class="view-heading"><p class="eyebrow">CONVERSATION WITH CONTEXT</p><h1>Ask the <em>why</em><br>behind the code.</h1><p class="lede">Every response is grounded in your indexed source, with citations you can inspect.</p></div>
+      <div class="gate" data-requires-repo><span>✦</span><h2>Your repository is waiting</h2><p>Index a repository first, then return here to start a grounded conversation.</p><button class="secondary-button" data-go="setup">Set up repository <b>→</b></button></div>
+      <div class="chat-layout hidden" data-repo-content>
+        <aside class="question-rail"><div class="rail-top"><span class="eyebrow">START HERE</span><button class="text-button" id="refresh-questions">Refresh</button></div><div id="suggested-questions" class="suggested-list"></div><div class="rail-bottom">Answers are sourced from your repository, not the open web.</div></aside>
+        <div class="chat-panel surface"><div class="chat-scroll" id="chat-messages"><div class="welcome-message"><span>✦</span><div><h2>What are we looking for?</h2><p>Ask about architecture, a feature, an unfamiliar module, or a design decision.</p></div></div></div><form class="composer" id="chat-form"><textarea id="chat-input" rows="1" placeholder="Ask anything about this repository…"></textarea><button class="send-button" aria-label="Send question" type="submit">↑</button></form></div>
+      </div>
+    </section>
+
+    <section class="view" id="explorer-view">
+      <div class="view-heading compact"><p class="eyebrow">A LIVING MAP OF THE CODEBASE</p><h1>Explore the <em>source.</em></h1></div>
+      <div class="gate" data-requires-repo><span>⌘</span><h2>The map needs a territory</h2><p>Index a repository to browse its files and understand how they fit together.</p><button class="secondary-button" data-go="setup">Set up repository <b>→</b></button></div>
+      <div class="explorer-wrap hidden" data-repo-content>
+        <div class="tab-list" role="tablist"><button class="tab active" data-tab="files">Files</button><button class="tab" data-tab="explain">Explain a file</button><button class="tab" data-tab="architecture">Architecture</button></div>
+        <div class="surface explorer-panel">
+          <div class="tab-panel active" id="files-tab"><div class="tree-layout"><div class="file-tree" id="file-tree"><div class="loading-line">Loading source map…</div></div><div class="code-viewer" id="code-viewer"><div class="empty-state"><span>⌘</span><h3>Select a file</h3><p>Its source will appear here.</p></div></div></div></div>
+          <div class="tab-panel" id="explain-tab"><div class="explain-wrap"><div><p class="eyebrow">READ BETWEEN THE LINES</p><h2>Turn a file into a plain-English brief.</h2><p>Choose a file from the source map or enter a path below.</p></div><form id="explain-form"><label for="explain-path">File path</label><div class="inline-form"><input id="explain-path" placeholder="e.g. backend/main.py" /><button class="primary-button" type="submit"><span>Explain file</span><b>→</b></button></div></form><article class="explanation hidden" id="explanation"></article></div></div>
+          <div class="tab-panel" id="architecture-tab"><div class="architecture-wrap"><div><p class="eyebrow">THE BIG PICTURE</p><h2>How the parts<br><em>belong together.</em></h2></div><button class="secondary-button" id="architecture-button">Refresh overview <b>↻</b></button><article class="architecture-copy" id="architecture-copy">Select refresh to retrieve the architecture overview.</article></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="api-dialog"><form method="dialog" class="api-dialog-card"><button class="close-dialog" value="cancel" aria-label="Close">×</button><p class="eyebrow">CONNECTION</p><h2>Backend API address</h2><label for="api-url">API URL</label><input id="api-url" type="url" placeholder="http://localhost:8000" /><button class="primary-button" id="save-api" value="default"><span>Save connection</span><b>→</b></button><p class="form-note">For this project, the default is <code>http://localhost:8000</code>.</p></form></dialog>
+  <div class="toast hidden" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>

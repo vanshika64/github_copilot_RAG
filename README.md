@@ -11,8 +11,10 @@ explorer with AI explanations.
 ```
 github-rag-copilot/
 │
-├── frontend/                # Streamlit UI
-│   └── app.py
+├── frontend/                # Static HTML, CSS, and JavaScript UI
+│   ├── index.html
+│   ├── styles.css
+│   └── app.js
 │
 ├── backend/                 # FastAPI service
 │   ├── main.py               # app entrypoint
@@ -127,12 +129,14 @@ uvicorn main:app --reload --port 8000 --reload-exclude "repo_cache/*" --reload-e
 **Terminal 2 — frontend:**
 ```bash
 cd frontend
-streamlit run app.py
+python -m http.server 5173
 ```
 
-Then open the Streamlit URL (usually `http://localhost:8501`), paste a
-GitHub repo URL on the **Repository Setup** page, wait for indexing to
-finish, and switch to **Repository Chat** or **Repository Explorer**.
+Then open `http://localhost:5173`, paste a GitHub repository URL on the
+**Repository Setup** page, wait for indexing to finish, and switch to
+**Ask the codebase** or **Explore the source**. The interface connects to
+`http://localhost:8000` by default; use **API settings** in the sidebar if
+your backend is hosted elsewhere.
 
 ## Notes
 
