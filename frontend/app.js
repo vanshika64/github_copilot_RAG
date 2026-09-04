@@ -1,5 +1,5 @@
 const state = { repoId: null, repoUrl: "", indexed: false, chat: [], treeLoaded: false, questionsLoaded: false };
-let apiBase = localStorage.getItem("copilot-api-url") || "http://localhost:8000";
+let apiBase = localStorage.getItem("copilot-api-url") || "https://github-copilot-backend.onrender.com";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
