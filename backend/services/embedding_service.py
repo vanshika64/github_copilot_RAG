@@ -11,7 +11,7 @@ import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer
 
-from backend.utils.config import EMBEDDING_MODEL_NAME, INDEX_DIR
+from backend.utils.config import EMBEDDING_BATCH_SIZE, EMBEDDING_MODEL_NAME, INDEX_DIR
 from backend.services.chunking_service import Chunk
 
 _model: Optional[SentenceTransformer] = None
@@ -27,7 +27,7 @@ def get_embedding_model() -> SentenceTransformer:
 def embed_texts(texts: List[str]) -> np.ndarray:
     model = get_embedding_model()
     vecs = model.encode(
-        texts, batch_size=32, show_progress_bar=False,
+        texts, batch_size=EMBEDDING_BATCH_SIZE, show_progress_bar=False,
         convert_to_numpy=True, normalize_embeddings=True,
     )
     return vecs.astype("float32")
@@ -45,11 +45,17 @@ def build_and_save_index(repo_id: str, chunks: List[Chunk]) -> None:
     if not chunks:
         raise ValueError("No chunks to index.")
 
-    embeddings = embed_texts([c.content for c in chunks])
-    dim = embeddings.shape[1]
+    # Add vectors incrementally. The previous implementation encoded every
+    # chunk at once, retaining the full embedding matrix in RAM. That caused
+    # small cloud instances to be killed partway through indexing.
+    index = None
+    for start in range(0, len(chunks), EMBEDDING_BATCH_SIZE):
+        batch = chunks[start:start + EMBEDDING_BATCH_SIZE]
+        embeddings = embed_texts([chunk.content for chunk in batch])
+        if index is None:
+            index = faiss.IndexFlatIP(embeddings.shape[1])  # cosine similarity
+        index.add(embeddings)
 
-    index = faiss.IndexFlatIP(dim)  # cosine sim via normalized vectors + inner product
-    index.add(embeddings)
     faiss.write_index(index, str(faiss_path))
 
     with open(meta_path, "wb") as f:

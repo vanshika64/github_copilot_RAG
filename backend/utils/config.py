@@ -38,6 +38,10 @@ GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 
 # ---- Embeddings ---------------------------------------------------------------
 EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME", "all-MiniLM-L6-v2")
+# Encoding a large repository in one batch can exceed the memory available on
+# small deployment instances. Keep the default deliberately conservative;
+# deployments with more memory can increase it via an environment variable.
+EMBEDDING_BATCH_SIZE = int(os.getenv("EMBEDDING_BATCH_SIZE", 8))
 RERANKER_MODEL_NAME = os.getenv("RERANKER_MODEL_NAME", "cross-encoder/ms-marco-MiniLM-L-6-v2")
 
 # ---- Chunking -------------------------------------------------------------

@@ -74,15 +74,24 @@ function renderValidation(repo) {
   $("#repository-result").innerHTML = `<div class="result-grid"><div class="metric"><small>STARS</small><b>${repo.stars ?? "—"}</b></div><div class="metric"><small>PRIMARY LANGUAGE</small><b>${escapeHtml(repo.language || "—")}</b></div><div class="metric"><small>ACCESS</small><b>${repo.is_private ? "Private" : "Public"}</b></div><div class="metric"><small>DEFAULT BRANCH</small><b>${escapeHtml(repo.default_branch || "—")}</b></div></div>${repo.description ? `<article class="surface summary-panel"><p class="eyebrow">REPOSITORY FOUND</p><h2>${escapeHtml(repo.owner || "")}/${escapeHtml(repo.repo || "")}</h2><p>${escapeHtml(repo.description)}</p></article>` : ""}`;
 }
 async function pollIndex(repoId, url) {
-  let failures = 0;
-  while (failures < 8) {
+  let failures = 0, lastStage = "";
+  while (failures < 25) {
     try {
-      const status = await request(`/api/repository/status/${encodeURIComponent(repoId)}`); failures = 0; setProgress(status);
+      const status = await request(`/api/repository/status/${encodeURIComponent(repoId)}`); failures = 0; lastStage = status.stage || ""; setProgress(status);
       if (status.done) {
         if (status.error) throw new Error(`Indexing failed: ${status.error}`);
         setRepository(repoId, url); toast("Repository indexed. Your workspace is ready."); await loadRepositoryInsights(); return;
       }
-    } catch (error) { failures += 1; if (failures >= 8) throw error; $("#progress-message").textContent = "Reconnecting to the indexing service…"; }
+    } catch (error) {
+      failures += 1;
+      if (failures >= 25) {
+        if (lastStage === "embedding") {
+          throw new Error("The backend stopped while loading embeddings. Check your deployment logs for an out-of-memory restart, then use a larger-memory instance.");
+        }
+        throw error;
+      }
+      $("#progress-message").textContent = "Reconnecting to the indexing service…";
+    }
     await wait(1200);
   }
 }
