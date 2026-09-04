@@ -12,8 +12,8 @@ from typing import List, Tuple
 
 from groq import Groq
 
-from utils.config import GROQ_API_KEY, GROQ_MODEL
-from services.chunking_service import Chunk
+from backend.utils.config import GROQ_API_KEY, GROQ_MODEL
+from backend.services.chunking_service import Chunk
 
 _client = None
 

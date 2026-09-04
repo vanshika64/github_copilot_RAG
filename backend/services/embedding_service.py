@@ -11,8 +11,8 @@ import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer
 
-from utils.config import EMBEDDING_MODEL_NAME, INDEX_DIR
-from services.chunking_service import Chunk
+from backend.utils.config import EMBEDDING_MODEL_NAME, INDEX_DIR
+from backend.services.chunking_service import Chunk
 
 _model: Optional[SentenceTransformer] = None
 

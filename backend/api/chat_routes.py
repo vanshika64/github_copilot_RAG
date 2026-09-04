@@ -4,11 +4,11 @@ prompt construction -> LLM answer -> citations -> suggested follow-ups.
 """
 from fastapi import APIRouter, HTTPException
 
-from models.schemas import ChatRequest, ChatResponse, SourceChunk
-from services.embedding_service import index_exists
-from services.retrieval_service import retrieve_and_rerank, understand_query
-from services import llm_service
-from utils import state
+from backend.models.schemas import ChatRequest, ChatResponse, SourceChunk
+from backend.services.embedding_service import index_exists
+from backend.services.retrieval_service import retrieve_and_rerank, understand_query
+from backend.services import llm_service
+from backend.utils import state
 
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 

@@ -14,18 +14,18 @@ from collections import Counter
 
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 
-from models.schemas import (
+from backend.models.schemas import (
     RepoRequest, RepoValidationResponse, IndexStartResponse, IndexStatusResponse,
     RepoStats, FileTreeResponse, FileContentResponse, ExplainFileRequest,
     ExplainFileResponse, ArchitectureResponse, SummaryResponse, SuggestedQuestionsResponse,
 )
-from services import github_service
-from services.parser_service import detect_language
-from services.chunking_service import chunk_repository
-from services.embedding_service import build_and_save_index, save_stats, load_stats, index_exists
-from services import llm_service
-from utils.file_utils import filter_files, build_file_tree
-from utils import state
+from backend.services import github_service
+from backend.services.parser_service import detect_language
+from backend.services.chunking_service import chunk_repository
+from backend.services.embedding_service import build_and_save_index, save_stats, load_stats, index_exists
+from backend.services import llm_service
+from backend.utils.file_utils import filter_files, build_file_tree
+from backend.utils import state
 
 router = APIRouter(prefix="/api/repository", tags=["repository"])
 

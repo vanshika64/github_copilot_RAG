@@ -14,8 +14,8 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import List
 
-from services.parser_service import parse_file, detect_language, CodeUnit
-from utils.config import MAX_CHUNK_CHARS, CHUNK_OVERLAP_CHARS
+from backend.services.parser_service import parse_file, detect_language, CodeUnit
+from backend.utils.config import MAX_CHUNK_CHARS, CHUNK_OVERLAP_CHARS
 
 
 @dataclass

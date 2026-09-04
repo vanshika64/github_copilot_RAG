@@ -9,8 +9,8 @@ Run with:
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api import repository_routes, chat_routes
-from utils.config import BACKEND_HOST, BACKEND_PORT
+from backend.api import repository_routes, chat_routes
+from backend.utils.config import BACKEND_HOST, BACKEND_PORT
 
 app = FastAPI(
     title="GitHub RAG Copilot API",

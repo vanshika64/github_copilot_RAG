@@ -6,7 +6,7 @@ media, caches and VCS internals.
 from pathlib import Path
 from typing import List
 
-from utils.config import MAX_FILE_SIZE_BYTES
+from backend.utils.config import MAX_FILE_SIZE_BYTES
 
 # Extensions we want to index (source code + important config/docs)
 ALLOWED_EXTENSIONS = {

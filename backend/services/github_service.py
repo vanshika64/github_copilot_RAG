@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 
 import requests
 
-from utils.config import GITHUB_API_URL, GITHUB_TOKEN, CLONE_DIR
+from backend.utils.config import GITHUB_API_URL, GITHUB_TOKEN, CLONE_DIR
 
 GITHUB_URL_RE = re.compile(
     r"^(https?://)?(www\.)?github\.com/(?P<owner>[\w.-]+)/(?P<repo>[\w.-]+?)(\.git)?/?$"

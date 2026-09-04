@@ -6,9 +6,9 @@ from typing import List, Optional, Tuple
 
 from sentence_transformers import CrossEncoder
 
-from services.embedding_service import load_index, embed_query
-from services.chunking_service import Chunk
-from utils.config import RERANKER_MODEL_NAME, TOP_K_RETRIEVE, TOP_N_RERANK
+from backend.services.embedding_service import load_index, embed_query
+from backend.services.chunking_service import Chunk
+from backend.utils.config import RERANKER_MODEL_NAME, TOP_K_RETRIEVE, TOP_N_RERANK
 
 _reranker: Optional[CrossEncoder] = None
 
