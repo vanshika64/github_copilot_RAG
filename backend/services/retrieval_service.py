@@ -4,18 +4,19 @@ Query understanding + vector retrieval + cross-encoder reranking.
 import re
 from typing import List, Optional, Tuple
 
-from sentence_transformers import CrossEncoder
-
 from backend.services.embedding_service import load_index, embed_query
 from backend.services.chunking_service import Chunk
-from backend.utils.config import RERANKER_MODEL_NAME, TOP_K_RETRIEVE, TOP_N_RERANK
+from backend.utils.config import (
+    EMBEDDING_PROVIDER, RERANKER_MODEL_NAME, TOP_K_RETRIEVE, TOP_N_RERANK,
+)
 
-_reranker: Optional[CrossEncoder] = None
+_reranker = None
 
 
-def get_reranker() -> CrossEncoder:
+def get_reranker():
     global _reranker
     if _reranker is None:
+        from sentence_transformers import CrossEncoder
         _reranker = CrossEncoder(RERANKER_MODEL_NAME)
     return _reranker
 
@@ -84,6 +85,8 @@ def retrieve(repo_id: str, query: str, top_k: int = TOP_K_RETRIEVE) -> List[Tupl
 def rerank(query: str, candidates: List[Tuple[Chunk, float]], top_n: int = TOP_N_RERANK) -> List[Tuple[Chunk, float]]:
     if not candidates:
         return []
+    if EMBEDDING_PROVIDER == "hashing":
+        return candidates[:top_n]
     reranker = get_reranker()
     pairs = [[query, c.content] for c, _ in candidates]
     cross_scores = reranker.predict(pairs)

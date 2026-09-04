@@ -37,10 +37,12 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 
 # ---- Embeddings ---------------------------------------------------------------
+# Hashing embeddings are the default because they run comfortably on small
+# cloud instances. Set EMBEDDING_PROVIDER=sentence-transformers on a larger
+# machine when semantic transformer embeddings are desired.
+EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "hashing").lower()
+HASH_EMBEDDING_DIM = int(os.getenv("HASH_EMBEDDING_DIM", 384))
 EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME", "all-MiniLM-L6-v2")
-# Encoding a large repository in one batch can exceed the memory available on
-# small deployment instances. Keep the default deliberately conservative;
-# deployments with more memory can increase it via an environment variable.
 EMBEDDING_BATCH_SIZE = int(os.getenv("EMBEDDING_BATCH_SIZE", 8))
 RERANKER_MODEL_NAME = os.getenv("RERANKER_MODEL_NAME", "cross-encoder/ms-marco-MiniLM-L-6-v2")
 
